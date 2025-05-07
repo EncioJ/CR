@@ -6,7 +6,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./Navbar";
 
-// 🆕 Firebase Firestore import
+// Firebase Firestore import
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { getAuth } from "firebase/auth";
@@ -43,56 +43,62 @@ function Cart() {
     toast.error(`${name} removed from cart`, { autoClose: 1000 });
   };
 
-  // Inside the Cart component:
-const handleCheckout = async () => {
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const handleCheckout = async () => {
+    const auth = getAuth();
+    const user = auth.currentUser;
 
-  if (!user || !user.email) {
-    toast.error("You must be signed in to place an order.");
-    return;
-  }
+    if (!user || !user.email) {
+      toast.error("You must be signed in to place an order.");
+      return;
+    }
 
-  if (cartItems.length === 0) {
-    toast.warning("Your cart is empty!");
-    return;
-  }
+    if (cartItems.length === 0) {
+      toast.warning("Your cart is empty!");
+      return;
+    }
 
-  const confirm = window.confirm("Are you sure you want to place the order?");
-  if (!confirm) return;
+    const confirm = window.confirm("Are you sure you want to place the order?");
+    if (!confirm) return;
 
-  const orderData = {
-    customerName: user.displayName || "Customer",
-    email: user.email,
-    items: cartItems.map(item => ({
-      name: item.name,
-      price: item.price,
-      quantity: item.quantity
-    })),
-    total: totalPrice,
-    status: "pending",
-    createdAt: serverTimestamp()
+    const orderData = {
+      customerName: user.displayName || "Customer",
+      email: user.email,
+      items: cartItems.map(item => ({
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity
+      })),
+      total: totalPrice,
+      status: "pending",
+      createdAt: serverTimestamp()
+    };
+
+    try {
+      const docRef = await addDoc(collection(db, "orders"), orderData);
+      console.log("Order ID:", docRef.id);
+      toast.success(`Order submitted! Receipt will be sent to ${user.email}`);
+    } catch (error) {
+      console.error("Order submission error:", error);
+      toast.error("Failed to place order.");
+    }
   };
-
-  try {
-    const docRef = await addDoc(collection(db, "orders"), orderData);
-    console.log("Order ID:", docRef.id);
-    toast.success(`Order submitted! Receipt will be sent to ${user.email}`);
-  } catch (error) {
-    console.error("Order submission error:", error);
-    toast.error("Failed to place order.");
-  }
-};
 
   return (
     <div className="cart-container">
       <Navbar />
       <ToastContainer />
       <div className="cart-header">
-        <h1>Your Cart</h1>
       </div>
       {cartItems.length === 0 ? (
-        <p className="empty-cart-message">Empty cart! GO BUY SOMETHING 😡</p>
+        <div className="empty-cart-container">
+          <h2 className="empty-cart-title">Your Cart is Empty</h2>
+          <p className="empty-cart-message">
+            Oops! It looks like you haven’t added anything to your cart yet. Explore our menu and find something delicious!
+          </p>
+          <button className="empty-cart-btn" onClick={() => navigate("/menu")}>
+            Explore Menu
+          </button>
+        </div>
       ) : (
         <div className="cart-content">
           <div className="cart-table">
@@ -148,7 +154,6 @@ const handleCheckout = async () => {
               <div className="cart-total">
                 <strong>${totalPrice.toFixed(2)}</strong>
               </div>
-              {/* 🆕 Checkout button connected */}
               <button className="checkout-btn" onClick={handleCheckout}>
                 Checkout
               </button>

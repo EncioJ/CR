@@ -134,7 +134,7 @@ function Login() {
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      navigate('/login');
+      navigate('/login', { replace: true }); // Use replace to avoid adding to history stack
     } catch (error) {
       console.error('Error logging out:', error);
     }

@@ -9,6 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 function AdminDashboard() {
   const [user, setUser] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
+  const [selectedSection, setSelectedSection] = useState(null);
   const [newMenuItem, setNewMenuItem] = useState({ name: "", price: "", image: "" });
   const [newSectionName, setNewSectionName] = useState("");
   const [users, setUsers] = useState([]);
@@ -33,17 +34,20 @@ function AdminDashboard() {
       });
 
       setMenuItems(menuData);
+      if (!selectedSection && menuData.length > 0) {
+        setSelectedSection(menuData[0].id); // Default to the first section
+      }
     });
 
     return () => {
       unsubscribeAuth();
       unsubscribeMenu();
     };
-  }, []);
+  }, [selectedSection]);
 
-  const handleAddMenuItem = async (sectionId) => {
+  const handleAddMenuItem = async () => {
     try {
-      const sectionDoc = menuItems.find((item) => item.id === sectionId);
+      const sectionDoc = menuItems.find((item) => item.id === selectedSection);
       if (!sectionDoc) {
         toast.error("Section does not exist.", {
           position: "top-right",
@@ -61,7 +65,7 @@ function AdminDashboard() {
         },
       ];
 
-      const sectionRef = doc(db, "menu", sectionId);
+      const sectionRef = doc(db, "menu", selectedSection);
       await updateDoc(sectionRef, { items: updatedItems });
 
       toast.success("Menu item added successfully!", {
@@ -73,33 +77,6 @@ function AdminDashboard() {
     } catch (error) {
       console.error("Error adding menu item:", error);
       toast.error("Failed to add menu item. Please try again.", {
-        position: "top-right",
-        autoClose: 2000,
-      });
-    }
-  };
-
-  const handleRemoveMenuItem = async (sectionId, itemIndex) => {
-    if (!window.confirm("Are you sure you want to delete this menu item?")) {
-      return;
-    }
-
-    try {
-      const sectionDoc = menuItems.find((item) => item.id === sectionId);
-      if (!sectionDoc) return;
-
-      const updatedItems = sectionDoc.items.filter((_, index) => index !== itemIndex);
-
-      const sectionRef = doc(db, "menu", sectionId);
-      await updateDoc(sectionRef, { items: updatedItems });
-
-      toast.success("Menu item removed successfully!", {
-        position: "top-right",
-        autoClose: 2000,
-      });
-    } catch (error) {
-      console.error("Error removing menu item:", error);
-      toast.error("Failed to remove menu item. Please try again.", {
         position: "top-right",
         autoClose: 2000,
       });
@@ -143,6 +120,10 @@ function AdminDashboard() {
         position: "top-right",
         autoClose: 2000,
       });
+
+      if (selectedSection === sectionId) {
+        setSelectedSection(null);
+      }
     } catch (error) {
       console.error("Error removing section:", error);
       toast.error("Failed to remove section. Please try again.", {
@@ -211,61 +192,81 @@ function AdminDashboard() {
               <button onClick={handleAddSection}>Add Section</button>
             </div>
 
-            {/* Menu Items */}
-            {menuItems.map((item) => (
-              <div key={item.id} className="menu-category">
-                <p className="category-title">
-                  {item.category}
-                  <button
-                    className="remove-section-button"
-                    onClick={() => handleRemoveSection(item.id)}
-                  >
-                    Remove Section
-                  </button>
-                </p>
-                <div className="menu-items-grid">
-                  {item.items.map((food, index) => (
-                    <div key={index} className="menu-item-card">
-                      <img
-                        src={food.image || "data:image/jpeg;base64,/path/to/default-image"}
-                        alt={food.name}
-                        className="menu-item-image"
-                      />
-                      <p className="menu-item-name">{food.name}</p>
-                      <button
-                        className="remove-button"
-                        onClick={() => handleRemoveMenuItem(item.id, index)}
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
-                </div>
+            {/* Add Menu Item Form */}
+            <div className="add-menu-item-form">
+              <input
+                type="text"
+                placeholder="Name"
+                value={newMenuItem.name}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, name: e.target.value })}
+              />
+              <input
+                type="text"
+                placeholder="Price"
+                value={newMenuItem.price}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, price: e.target.value })}
+              />
+              <input
+                type="text"
+                placeholder="Image URL"
+                value={newMenuItem.image}
+                onChange={(e) => setNewMenuItem({ ...newMenuItem, image: e.target.value })}
+              />
+              <button onClick={handleAddMenuItem}>Add Menu Item</button>
+            </div>
 
-                {/* Add Menu Item Form for Each Section */}
-                <div className="add-menu-item-form">
-                  <input
-                    type="text"
-                    placeholder="Name"
-                    value={newMenuItem.name}
-                    onChange={(e) => setNewMenuItem({ ...newMenuItem, name: e.target.value })}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Price"
-                    value={newMenuItem.price}
-                    onChange={(e) => setNewMenuItem({ ...newMenuItem, price: e.target.value })}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Image URL"
-                    value={newMenuItem.image}
-                    onChange={(e) => setNewMenuItem({ ...newMenuItem, image: e.target.value })}
-                  />
-                  <button onClick={() => handleAddMenuItem(item.id)}>Add Menu Item</button>
+            {/* Dropdown to Select Section */}
+            <div className="section-dropdown">
+              <label htmlFor="section-select">Select Section:</label>
+              <select
+                id="section-select"
+                value={selectedSection || ""}
+                onChange={(e) => setSelectedSection(e.target.value)}
+              >
+                {menuItems.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.category}
+                  </option>
+                ))}
+              </select>
+              {selectedSection && (
+                <button
+                className="remove-section-button"
+                onClick={() => handleRemoveSection(selectedSection)}
+              >
+                Remove Section
+              </button>
+              )}
+            </div>
+
+            {/* Display Selected Section */}
+            {selectedSection && (
+              <div className="menu-category">
+                <h3>
+                  {menuItems.find((item) => item.id === selectedSection)?.category}
+                </h3>
+                <div className="menu-items-grid">
+                  {menuItems
+                    .find((item) => item.id === selectedSection)
+                    ?.items.map((food, index) => (
+                      <div key={index} className="menu-item-card">
+                        <img
+                          src={food.image || "data:image/jpeg;base64,/path/to/default-image"}
+                          alt={food.name}
+                          className="menu-item-image"
+                        />
+                        <p className="menu-item-name">{food.name}</p>
+                        <button
+                          className="remove-button"
+                          onClick={() => handleRemoveMenuItem(index)}
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    ))}
                 </div>
               </div>
-            ))}
+            )}
           </section>
         )}
 
