@@ -3,7 +3,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: linear-gradient(90deg,#0a6e0a, #003a00, #0a6e0a); /* Gradient green background */
+  background: linear-gradient(90deg, #0a6e0a, #003a00, #0a6e0a); /* Gradient green background */
   padding: 10px 20px;
   height: 80px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.8);
@@ -13,7 +13,6 @@
   right: 0;
   z-index: 1000;
 }
-
 
 /* Logo */
 .navbar-logo {
@@ -79,21 +78,35 @@
   gap: 1rem;
 }
 
-.navbar-right .login-button {
-  background: transparent; /* Transparent background to follow navbar gradient */
-  color: white;
-  border: none; /* Remove button outline */
-  padding: 10px 15px;
-  font-size: 16px;
+/* Profile Button */
+.navbar-right .profile-button {
+  background: none; /* Transparent background */
+  border: none;
   cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+  width: 50px; /* Match the shopping cart size */
+  height: 50px; /* Match the shopping cart size */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%; /* Make it circular if needed */
+  overflow: hidden; /* Prevent oversized content */
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.navbar-right .login-button:hover {
+.navbar-right .profile-button img {
+  width: 40px;
+  height: 40px;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* Ensures proper scaling */
+}
+
+.navbar-right .profile-button:hover {
   background: rgba(255, 255, 255, 0.2); /* Slight white overlay on hover */
+  transform: scale(1.05);
 }
 
+/* Shopping Cart Button */
 .navbar-right .shopping-cart-button {
   background: none;
   border: none;
@@ -139,9 +152,14 @@ body {
     margin-top: 10px;
   }
 
-  .navbar-right .login-button {
-    font-size: 0.9rem;
-    padding: 8px 12px;
+  .navbar-right .profile-button {
+    width: 35px; /* Adjust for smaller screens */
+    height: 35px; /* Adjust for smaller screens */
+  }
+
+  .navbar-right .profile-button img {
+    width: 35px; /* Adjust for smaller screens */
+    height: 35px; /* Adjust for smaller screens */
   }
 
   .navbar-right .shopping-cart-button img {
@@ -163,9 +181,14 @@ body {
     padding: 6px 10px;
   }
 
-  .navbar-right .login-button {
-    font-size: 0.8rem;
-    padding: 6px 10px;
+  .navbar-right .profile-button {
+    width: 30px; /* Adjust for smaller screens */
+    height: 30px; /* Adjust for smaller screens */
+  }
+
+  .navbar-right .profile-button img {
+    width: 30px; /* Adjust for smaller screens */
+    height: 30px; /* Adjust for smaller screens */
   }
 
   .navbar-right .shopping-cart-button img {
