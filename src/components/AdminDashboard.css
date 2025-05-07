@@ -1,141 +1,82 @@
+/* General Styles */
 .admin-dashboard {
-  padding: 30px;
+  padding: 20px;
   font-family: 'Poppins', sans-serif;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  background-color: #f4f3ff;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9fc;
 }
 
 .admin-dashboard h1 {
   text-align: center;
-  margin-bottom: 25px;
-  color: #4a3aff;
-  font-size: 2.2rem;
-  font-weight: 600;
+  margin-bottom: 20px;
+  color: #4a4a6a;
+  font-size: 2.5rem;
+  font-weight: 700;
 }
 
-.side-menu {
+/* Top Menu */
+.top-menu {
   display: flex;
-  flex-direction: column;
-  width: 220px;
-  float: left;
-  margin-right: 30px;
-  background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.07);
-  padding: 20px;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 30px;
 }
 
-.side-menu button {
-  padding: 12px;
-  margin-bottom: 12px;
-  background-color: #f5f6fe;
+.top-menu button {
+  padding: 12px 20px;
+  background-color: #4a3aff;
+  color: #ffffff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
-  color: #5a5a89;
+  font-weight: 600;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.side-menu button:hover {
-  background-color: #e0e4fc;
-  transform: scale(1.02);
+.top-menu button:hover {
+  background-color: #372fbd;
+  transform: scale(1.05);
 }
 
-.side-menu .active-tab {
-  background-color: #4a3aff;
-  color: #ffffff;
+.top-menu .active-tab {
+  background-color: #372fbd;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Content Section */
 .content {
-  margin-left: 250px;
-  padding: 25px;
   background-color: #ffffff;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-.menu-category {
-  margin-bottom: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
-  background-color: #f8f8fe;
-  border-radius: 20px;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.05);
 }
 
-.menu-category .category-title {
-  font-weight: 600;
-  font-size: 1.2rem;
-  color: #3d3d6b;
-  margin-bottom: 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.menu-item {
-  padding: 8px 0;
-  color: #62628a;
-  font-size: 1rem;
-  border-bottom: 1px solid #ddd;
-}
-
-.menu-item:last-child {
-  border-bottom: none;
-}
-
-.menu-item:hover {
-  color: #4a3aff;
-}
-
-.remove-button,
-.remove-section-button {
-  margin-left: 10px;
-  padding: 6px 12px;
-  background-color: #ff6b6b;
-  color: #ffffff;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-size: 0.9rem;
-  transition: background-color 0.3s ease;
-}
-
-.remove-button:hover,
-.remove-section-button:hover {
-  background-color: #e63946;
-}
-
+/* Add Section Form */
 .add-section-form {
-  margin-top: 25px;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 12px;
-  background-color: #f5f6ff;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .add-section-form input {
-  padding: 12px;
-  width: 300px;
+  flex: 1;
+  max-width: 300px;
+  padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 1rem;
-  color: #333;
-  background-color: #ffffff;
 }
 
 .add-section-form button {
-  padding: 12px 24px;
-  background-color: #00c48c;
+  padding: 10px 20px;
+  background-color: #4a3aff;
   color: #ffffff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
@@ -143,40 +84,115 @@
 }
 
 .add-section-form button:hover {
-  background-color: #00b37a;
+  background-color: #372fbd;
   transform: scale(1.05);
 }
 
-.add-menu-item-form {
-  margin-top: 25px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr) auto;
-  gap: 12px;
-  align-items: center;
-  background-color: #f5f6ff;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+/* Menu Categories */
+.menu-category {
+  margin-bottom: 30px;
 }
 
-.add-menu-item-form input,
-.add-menu-item-form select {
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  font-size: 1rem;
-  color: #333;
+.menu-category .category-title {
+  font-weight: 600;
+  font-size: 1.5rem;
+  color: #4a4a6a;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu-category .remove-section-button {
+  padding: 8px 16px;
+  background-color: #ff6b6b;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.menu-category .remove-section-button:hover {
+  background-color: #e63946;
+}
+
+/* Menu Items Grid */
+.menu-items-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.menu-item-card {
   background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-item-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.menu-item-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.menu-item-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4a4a6a;
+  margin-bottom: 10px;
+}
+
+.remove-button {
+  padding: 8px 16px;
+  background-color: #ff6b6b;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.3s ease;
+}
+
+.remove-button:hover {
+  background-color: #e63946;
+}
+
+/* Add Menu Item Form */
+.add-menu-item-form {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.add-menu-item-form input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 0.9rem;
 }
 
 .add-menu-item-form button {
-  padding: 12px 24px;
+  padding: 8px 16px;
   background-color: #4a3aff;
   color: #ffffff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
@@ -186,11 +202,12 @@
   transform: scale(1.05);
 }
 
+/* Users Table */
 .users-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 25px;
-  border-radius: 10px;
+  margin-top: 20px;
+  border-radius: 8px;
   overflow: hidden;
 }
 
@@ -220,7 +237,7 @@
   background-color: #4a3aff;
   color: #ffffff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 0.9rem;
   transition: background-color 0.3s ease;
@@ -230,6 +247,7 @@
   background-color: #372fbd;
 }
 
+/* Logout Button */
 .logout-button {
   display: block;
   margin: 30px auto;
@@ -237,7 +255,7 @@
   background-color: #ff6b6b;
   color: #ffffff;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   font-weight: 600;
@@ -253,64 +271,24 @@
   transform: scale(0.95);
 }
 
+h1, h2, h3 {
+  color: black;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
-  .side-menu {
-    width: 180px;
-    margin-right: 20px;
+  .top-menu {
+    flex-direction: column;
+    gap: 10px;
   }
 
-  .content {
-    margin-left: 200px;
-    padding: 20px;
-  }
-
-  .menu-category {
-    padding: 15px;
-  }
-
-  .add-section-form input {
-    width: 100%;
-  }
-
-  .add-menu-item-form {
-    grid-template-columns: repeat(2, 1fr) auto;
-  }
-
-  .users-table th,
-  .users-table td {
-    font-size: 0.9rem;
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
-  .side-menu {
-    width: 100%;
-    margin-right: 0;
-    margin-bottom: 20px;
-    float: none;
-  }
-
-  .content {
-    margin-left: 0;
-    padding: 15px;
-  }
-
-  .menu-category {
-    padding: 10px;
-  }
-
-  .add-menu-item-form {
-    grid-template-columns: 1fr auto;
-  }
-
-  .users-table th,
-  .users-table td {
-    font-size: 0.8rem;
-  }
-
-  .logout-button {
-    font-size: 0.9rem;
-    padding: 10px 20px;
+  .menu-items-grid {
+    grid-template-columns: 1fr;
   }
 }

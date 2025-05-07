@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, signOut, sendEmailVerification, sendPasswordResetEmail, signInWithPopup } from 'firebase/auth';
-import { auth, provider } from '../firebaseConfig'; // Ensure `provider` is imported from your Firebase config
+import { auth, provider } from '../firebaseConfig';
 import userIcon from "./imageFiles/userIcon.svg";
 import lockIcon from "./imageFiles/lock.svg";
 import facebook from "./imageFiles/facebook.png";
@@ -18,11 +18,11 @@ function Login() {
   const [errorMsg, setErrorMsg] = useState('');
   const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState('accountInfo'); // State for active tab
-  const [showForgotPassword, setShowForgotPassword] = useState(false); // State for showing the forgot password input
-  const [resetEmail, setResetEmail] = useState(''); // Email for password reset
+  const [activeTab, setActiveTab] = useState('accountInfo');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
 
-  const adminEmail = "zyuhang002@gmail.com"; // Replace with your admin email
+  const adminEmail = "zyuhang002@gmail.com";
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -45,7 +45,6 @@ function Login() {
       const user = userCredential.user;
 
       if (user.email === adminEmail) {
-        // Redirect to Admin Dashboard if the email matches the admin email
         navigate('/admin');
       } else if (user.emailVerified) {
         setErrorMsg('');
@@ -78,7 +77,6 @@ function Login() {
       setIsLoading(true);
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log('Google Login User:', user);
       setErrorMsg('');
       navigate('/menu');
     } catch (error) {
@@ -104,11 +102,29 @@ function Login() {
         position: "top-right",
         autoClose: 2000,
       });
-      setShowForgotPassword(false); // Close the popup after success
-      setResetEmail(''); // Clear the input
+      setShowForgotPassword(false);
+      setResetEmail('');
     } catch (error) {
       console.error('Error sending password reset email:', error);
       toast.error('Failed to send password reset email. Please try again.', {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    }
+  };
+
+  const handleResendVerification = async () => {
+    try {
+      if (user) {
+        await sendEmailVerification(user);
+        toast.success('Verification email sent! Check your inbox.', {
+          position: "top-right",
+          autoClose: 2000,
+        });
+      }
+    } catch (error) {
+      console.error('Error sending verification email:', error);
+      toast.error('Failed to send verification email. Please try again.', {
         position: "top-right",
         autoClose: 2000,
       });
@@ -130,10 +146,7 @@ function Login() {
         return (
           <div>
             <h3>Account Information</h3>
-            <p>First Name: John</p>
-            <p>Last Name: Doe</p>
-            <p>Email: {user.email}</p>
-            <p>Phone Number: 123-456-7890</p>
+            <p>Email: {user?.email || 'N/A'}</p>
           </div>
         );
       case 'orderHistory':
@@ -158,19 +171,23 @@ function Login() {
         return (
           <div>
             <h3>Email Verification</h3>
-            {user.emailVerified ? (
-              <p>Your email is verified. Thank you!</p>
+            {user ? (
+              user.emailVerified ? (
+                <p>Your email is verified. Thank you!</p>
+              ) : (
+                <>
+                  <p>Your email is not verified. Please verify your email to access all features.</p>
+                  <button
+                    onClick={handleResendVerification}
+                    className="button2"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Sending...' : 'Resend Verification Email'}
+                  </button>
+                </>
+              )
             ) : (
-              <>
-                <p>Your email is not verified. Please verify your email to access all features.</p>
-                <button
-                  onClick={handleResendVerification}
-                  className="button2"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Sending...' : 'Resend Verification Email'}
-                </button>
-              </>
+              <p>Loading user information...</p>
             )}
           </div>
         );
@@ -294,8 +311,8 @@ function Login() {
                 <img
                   src={google}
                   alt="Google Icon"
-                  onClick={handleGoogleLogin} /* Added onClick handler */
-                  style={{ cursor: 'pointer' }} /* Make it look clickable */
+                  onClick={handleGoogleLogin}
+                  style={{ cursor: 'pointer' }}
                 />
                 <img src={facebook} alt="Facebook Icon" />
               </div>

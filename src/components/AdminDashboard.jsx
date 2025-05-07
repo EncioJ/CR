@@ -9,13 +9,12 @@ import 'react-toastify/dist/ReactToastify.css';
 function AdminDashboard() {
   const [user, setUser] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
-  const [newMenuItem, setNewMenuItem] = useState({ name: "", price: "", section: "", image: "" });
-  const [newSectionName, setNewSectionName] = useState(""); // For adding new sections
-  const [sections, setSections] = useState([]);
-  const [users, setUsers] = useState([]); // For managing users
-  const [activeTab, setActiveTab] = useState("menu"); // "menu" or "users"
+  const [newMenuItem, setNewMenuItem] = useState({ name: "", price: "", image: "" });
+  const [newSectionName, setNewSectionName] = useState("");
+  const [users, setUsers] = useState([]);
+  const [activeTab, setActiveTab] = useState("menu");
 
-  const adminEmail = "zyuhang002@gmail.com"; // Replace with your admin email
+  const adminEmail = "zyuhang002@gmail.com";
 
   useEffect(() => {
     const unsubscribeAuth = onAuthStateChanged(auth, (currentUser) => {
@@ -28,15 +27,12 @@ function AdminDashboard() {
 
     const unsubscribeMenu = onSnapshot(collection(db, "menu"), (snapshot) => {
       const menuData = [];
-      const sectionNames = [];
       snapshot.forEach((doc) => {
         const data = doc.data();
         menuData.push({ id: doc.id, ...data });
-        sectionNames.push(data.category);
       });
 
       setMenuItems(menuData);
-      setSections([...new Set(sectionNames)]); // Ensure unique section names
     });
 
     return () => {
@@ -45,25 +41,11 @@ function AdminDashboard() {
     };
   }, []);
 
-  // Fetch users from Firestore (assuming user data is stored in a "users" collection)
-  useEffect(() => {
-    const unsubscribeUsers = onSnapshot(collection(db, "users"), (snapshot) => {
-      const usersData = [];
-      snapshot.forEach((doc) => {
-        const data = doc.data();
-        usersData.push({ id: doc.id, ...data });
-      });
-      setUsers(usersData);
-    });
-
-    return () => unsubscribeUsers();
-  }, []);
-
-  const handleAddMenuItem = async () => {
+  const handleAddMenuItem = async (sectionId) => {
     try {
-      const sectionDoc = menuItems.find((item) => item.category === newMenuItem.section);
+      const sectionDoc = menuItems.find((item) => item.id === sectionId);
       if (!sectionDoc) {
-        toast.error("Section does not exist. Please select an existing section.", {
+        toast.error("Section does not exist.", {
           position: "top-right",
           autoClose: 2000,
         });
@@ -79,7 +61,7 @@ function AdminDashboard() {
         },
       ];
 
-      const sectionRef = doc(db, "menu", sectionDoc.id);
+      const sectionRef = doc(db, "menu", sectionId);
       await updateDoc(sectionRef, { items: updatedItems });
 
       toast.success("Menu item added successfully!", {
@@ -87,7 +69,7 @@ function AdminDashboard() {
         autoClose: 2000,
       });
 
-      setNewMenuItem({ name: "", price: "", section: "", image: "" });
+      setNewMenuItem({ name: "", price: "", image: "" });
     } catch (error) {
       console.error("Error adding menu item:", error);
       toast.error("Failed to add menu item. Please try again.", {
@@ -126,17 +108,6 @@ function AdminDashboard() {
 
   const handleAddSection = async () => {
     try {
-      // Check if the section already exists
-      const existingSection = menuItems.find((item) => item.category === newSectionName);
-      if (existingSection) {
-        toast.error("Section already exists. Please choose a different name.", {
-          position: "top-right",
-          autoClose: 2000,
-        });
-        return;
-      }
-
-      // Add the new section to Firestore
       const newSection = {
         category: newSectionName,
         items: [],
@@ -149,7 +120,6 @@ function AdminDashboard() {
         autoClose: 2000,
       });
 
-      // Clear the input field
       setNewSectionName("");
     } catch (error) {
       console.error("Error adding new section:", error);
@@ -166,7 +136,6 @@ function AdminDashboard() {
     }
 
     try {
-      // Remove the section from Firestore
       const sectionRef = doc(db, "menu", sectionId);
       await deleteDoc(sectionRef);
 
@@ -177,22 +146,6 @@ function AdminDashboard() {
     } catch (error) {
       console.error("Error removing section:", error);
       toast.error("Failed to remove section. Please try again.", {
-        position: "top-right",
-        autoClose: 2000,
-      });
-    }
-  };
-
-  const handleResetPassword = async (email) => {
-    try {
-      await sendPasswordResetEmail(auth, email);
-      toast.success(`Password reset email sent to ${email}`, {
-        position: "top-right",
-        autoClose: 2000,
-      });
-    } catch (error) {
-      console.error("Error sending password reset email:", error);
-      toast.error("Failed to send password reset email. Please try again.", {
         position: "top-right",
         autoClose: 2000,
       });
@@ -225,8 +178,8 @@ function AdminDashboard() {
       <ToastContainer />
       <h1>Admin Dashboard</h1>
 
-      {/* Side Menu */}
-      <div className="side-menu">
+      {/* Top Menu */}
+      <div className="top-menu">
         <button
           className={activeTab === "menu" ? "active-tab" : ""}
           onClick={() => setActiveTab("menu")}
@@ -246,30 +199,6 @@ function AdminDashboard() {
         {activeTab === "menu" && (
           <section>
             <h2>Manage Menu</h2>
-            {menuItems.map((item) => (
-              <div key={item.id} className="menu-category">
-                <p className="category-title">
-                  {item.category}
-                  <button
-                    className="remove-section-button"
-                    onClick={() => handleRemoveSection(item.id)}
-                  >
-                    Remove Section
-                  </button>
-                </p>
-                {item.items.map((food, index) => (
-                  <div key={index} className="menu-item">
-                    <span>{food.name} - ${food.price}</span>
-                    <button
-                      className="remove-button"
-                      onClick={() => handleRemoveMenuItem(item.id, index)}
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ))}
 
             {/* Add New Section Form */}
             <div className="add-section-form">
@@ -282,39 +211,61 @@ function AdminDashboard() {
               <button onClick={handleAddSection}>Add Section</button>
             </div>
 
-            {/* Add Menu Item Form */}
-            <div className="add-menu-item-form">
-              <input
-                type="text"
-                placeholder="Name"
-                value={newMenuItem.name}
-                onChange={(e) => setNewMenuItem({ ...newMenuItem, name: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="Price"
-                value={newMenuItem.price}
-                onChange={(e) => setNewMenuItem({ ...newMenuItem, price: e.target.value })}
-              />
-              <input
-                type="text"
-                placeholder="Image URL"
-                value={newMenuItem.image}
-                onChange={(e) => setNewMenuItem({ ...newMenuItem, image: e.target.value })}
-              />
-              <select
-                value={newMenuItem.section}
-                onChange={(e) => setNewMenuItem({ ...newMenuItem, section: e.target.value })}
-              >
-                <option value="">Select Section</option>
-                {sections.map((section, index) => (
-                  <option key={index} value={section}>
-                    {section}
-                  </option>
-                ))}
-              </select>
-              <button onClick={handleAddMenuItem}>Add Menu Item</button>
-            </div>
+            {/* Menu Items */}
+            {menuItems.map((item) => (
+              <div key={item.id} className="menu-category">
+                <p className="category-title">
+                  {item.category}
+                  <button
+                    className="remove-section-button"
+                    onClick={() => handleRemoveSection(item.id)}
+                  >
+                    Remove Section
+                  </button>
+                </p>
+                <div className="menu-items-grid">
+                  {item.items.map((food, index) => (
+                    <div key={index} className="menu-item-card">
+                      <img
+                        src={food.image || "data:image/jpeg;base64,/path/to/default-image"}
+                        alt={food.name}
+                        className="menu-item-image"
+                      />
+                      <p className="menu-item-name">{food.name}</p>
+                      <button
+                        className="remove-button"
+                        onClick={() => handleRemoveMenuItem(item.id, index)}
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Add Menu Item Form for Each Section */}
+                <div className="add-menu-item-form">
+                  <input
+                    type="text"
+                    placeholder="Name"
+                    value={newMenuItem.name}
+                    onChange={(e) => setNewMenuItem({ ...newMenuItem, name: e.target.value })}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Price"
+                    value={newMenuItem.price}
+                    onChange={(e) => setNewMenuItem({ ...newMenuItem, price: e.target.value })}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Image URL"
+                    value={newMenuItem.image}
+                    onChange={(e) => setNewMenuItem({ ...newMenuItem, image: e.target.value })}
+                  />
+                  <button onClick={() => handleAddMenuItem(item.id)}>Add Menu Item</button>
+                </div>
+              </div>
+            ))}
           </section>
         )}
 
