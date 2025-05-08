@@ -62,7 +62,7 @@
 
 .cart-item-name {
   font-weight: bold;
-  color: #d32f2f;
+  color: #000000;
 }
 
 .cart-item-category {
@@ -78,14 +78,14 @@
 
 .qty-btn {
   padding: 5px 10px;
-  background-color: #862222;
+  background-color: #0b5b2f;
   border: none;
   cursor: pointer;
   font-size: 1rem;
 }
 
 .qty-btn:disabled {
-  background-color: #682b2ba1;
+  background-color: #2b6833a1;
   cursor: not-allowed;
 }
 
@@ -140,7 +140,7 @@
 }
 
 .checkout-btn {
-  background-color: #d32f2f;
+  background-color: #4f4b4b;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -152,7 +152,7 @@
 }
 
 .checkout-btn:hover {
-  background-color: #b71c1c;
+  background-color: #526555;
 }
 
 /* Empty Cart Container */

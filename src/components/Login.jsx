@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword, signOut, sendEmailVerification, sendPasswordResetEmail, signInWithPopup } from 'firebase/auth';
-import { auth, provider } from '../firebaseConfig';
+import { doc, setDoc, getDoc, collection, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { auth, provider, db } from '../firebaseConfig';
 import userIcon from "./imageFiles/userIcon.svg";
 import lockIcon from "./imageFiles/lock.svg";
 import facebook from "./imageFiles/facebook.png";
@@ -21,18 +22,59 @@ function Login() {
   const [activeTab, setActiveTab] = useState('accountInfo');
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
+  const [showProfileCompletion, setShowProfileCompletion] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [orders, setOrders] = useState([]);
+  const [expandedSection, setExpandedSection] = useState(null);
 
   const adminEmail = "zyuhang002@gmail.com";
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
       if (user) {
         setUser(user);
+
+        // Fetch user data from Firestore
+        const userDocRef = doc(db, 'users', user.uid);
+        const userDoc = await getDoc(userDocRef);
+
+        if (userDoc.exists()) {
+          const userData = userDoc.data();
+          setFirstName(userData.firstName || '');
+          setLastName(userData.lastName || '');
+          setPhoneNumber(userData.phoneNumber || '');
+        } else {
+          // If user data is missing, show profile completion form
+          setShowProfileCompletion(true);
+        }
+
+        // Set up a real-time listener for the user's order history
+        try {
+          const ordersRef = collection(db, 'orders');
+          const q = query(ordersRef, where('email', '==', user.email), orderBy('createdAt', 'desc'));
+
+          const unsubscribeOrders = onSnapshot(q, (querySnapshot) => {
+            const fetchedOrders = querySnapshot.docs.map((doc) => ({
+              id: doc.id,
+              ...doc.data(),
+            }));
+            setOrders(fetchedOrders);
+          });
+
+          // Cleanup the listener when the component unmounts
+          return () => unsubscribeOrders();
+        } catch (error) {
+          console.error('Error setting up real-time listener for orders:', error);
+        }
       } else {
         setUser(null);
+        setOrders([]); // Clear orders when user logs out
       }
     });
 
+    // Cleanup the auth listener when the component unmounts
     return () => unsubscribe();
   }, []);
 
@@ -77,8 +119,32 @@ function Login() {
       setIsLoading(true);
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
+
+      // Check if the user already exists in Firestore
+      const userDocRef = doc(db, 'users', user.uid);
+      const userDoc = await getDoc(userDocRef);
+
+      if (!userDoc.exists()) {
+        // If the user is new, save their basic info to Firestore
+        await setDoc(userDocRef, {
+          firstName: user.displayName ? user.displayName.split(' ')[0] : '',
+          lastName: user.displayName ? user.displayName.split(' ')[1] || '' : '',
+          email: user.email,
+          phoneNumber: '', // Leave phone number blank for now
+        });
+
+        // Show profile completion form
+        setShowProfileCompletion(true);
+      } else {
+        // If the user already exists, fetch their data
+        const userData = userDoc.data();
+        setFirstName(userData.firstName || '');
+        setLastName(userData.lastName || '');
+        setPhoneNumber(userData.phoneNumber || '');
+        navigate('/menu');
+      }
+
       setErrorMsg('');
-      navigate('/menu');
     } catch (error) {
       console.error('Google login error:', error);
       setErrorMsg('Google sign-in failed. Please try again.');
@@ -87,56 +153,60 @@ function Login() {
     }
   };
 
-  const handleForgotPassword = async () => {
-    if (!resetEmail) {
-      toast.error('Please enter your email to reset your password.', {
-        position: "top-right",
-        autoClose: 2000,
-      });
-      return;
+  const handleLogout = async () => {
+    try {
+      await signOut(auth); // Sign out the user
+      setUser(null); // Clear the user state
+      navigate('/login'); // Redirect to the login page
+    } catch (error) {
+      console.error('Error logging out:', error);
+      setErrorMsg('Failed to log out. Please try again.');
     }
+  };
+
+  const handleCompleteProfile = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
 
     try {
-      await sendPasswordResetEmail(auth, resetEmail);
-      toast.success('Password reset email sent! Check your inbox.', {
-        position: "top-right",
-        autoClose: 2000,
-      });
-      setShowForgotPassword(false);
-      setResetEmail('');
+      const userDocRef = doc(db, 'users', user.uid);
+
+      // Save the completed profile data to Firestore
+      await setDoc(
+        userDocRef,
+        {
+          firstName,
+          lastName,
+          phoneNumber,
+          email: user.email,
+        },
+        { merge: true } // Merge to avoid overwriting existing data
+      );
+
+      setShowProfileCompletion(false);
+      navigate('/menu'); // Redirect to the menu after completion
     } catch (error) {
-      console.error('Error sending password reset email:', error);
-      toast.error('Failed to send password reset email. Please try again.', {
-        position: "top-right",
-        autoClose: 2000,
-      });
+      console.error('Error completing profile:', error);
+      setErrorMsg('Failed to complete profile. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleResendVerification = async () => {
     try {
+      setIsLoading(true);
       if (user) {
-        await sendEmailVerification(user);
-        toast.success('Verification email sent! Check your inbox.', {
-          position: "top-right",
-          autoClose: 2000,
-        });
+        await sendEmailVerification(user); // Send verification email using Firebase
+        toast.success('Verification email sent. Please check your inbox.');
+      } else {
+        toast.error('No user is logged in.');
       }
     } catch (error) {
       console.error('Error sending verification email:', error);
-      toast.error('Failed to send verification email. Please try again.', {
-        position: "top-right",
-        autoClose: 2000,
-      });
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate('/login', { replace: true }); // Use replace to avoid adding to history stack
-    } catch (error) {
-      console.error('Error logging out:', error);
+      toast.error('Failed to send verification email. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -144,20 +214,90 @@ function Login() {
     switch (activeTab) {
       case 'accountInfo':
         return (
-          <div>
+          <div className="account-info">
             <h3>Account Information</h3>
-            <p>Email: {user?.email || 'N/A'}</p>
+            <div className="account-info-cards">
+              <div className="info-card">
+                <h4>First Name</h4>
+                <p>{firstName || 'N/A'}</p>
+              </div>
+              <div className="info-card">
+                <h4>Last Name</h4>
+                <p>{lastName || 'N/A'}</p>
+              </div>
+              <div className="info-card">
+                <h4>Phone Number</h4>
+                <p>{phoneNumber || 'N/A'}</p>
+              </div>
+              <div className="info-card">
+                <h4>Email</h4>
+                <p>{user?.email || 'N/A'}</p>
+              </div>
+            </div>
           </div>
         );
       case 'orderHistory':
         return (
           <div>
             <h3>Order History</h3>
-            <p>Click on an order to view details.</p>
-            <ul>
-              <li>Order #12345 - $50.00</li>
-              <li>Order #67890 - $30.00</li>
-            </ul>
+            {orders.length === 0 ? (
+              <p>You have no past orders.</p>
+            ) : (
+              <div className="order-history">
+                {orders.map((order, index) => (
+                  <div key={order.id} className="order-card">
+                    <div className="order-section">
+                      <button
+                        className="order-section-header"
+                        onClick={() =>
+                          setExpandedSection(
+                            expandedSection === `order-${index}-id` ? null : `order-${index}-id`
+                          )
+                        }
+                      >
+                        <p>
+                          <strong>Order #:</strong> {order.id}
+                        </p>
+                        <p>
+                          <strong>Date:</strong> {order.createdAt?.toDate().toLocaleString()}
+                        </p>
+                      </button>
+                      {expandedSection === `order-${index}-id` && (
+                        <div className="order-section-content">
+                          <p>
+                            <strong>Status:</strong> {order.status || "Pending"}
+                          </p>
+                          <p>
+                            <strong>Total:</strong> ${order.total.toFixed(2)}
+                          </p>
+                          <p>
+                            <strong>Special Instructions:</strong>{" "}
+                            {order.specialInstructions || "None"}
+                          </p>
+                          <p>
+                            <strong>Items:</strong>
+                          </p>
+                          <ul>
+                            {order.items.map((item, idx) => (
+                              <li key={idx}>
+                                {item.quantity}x {item.name} - ${item.price.toFixed(2)}
+                              </li>
+                            ))}
+                          </ul>
+                          <button
+                            onClick={() => navigate(`/order-tracking/${order.id}`)}
+                            className="track-order-btn"
+                            disabled={order.status === "Complete"}
+                          >
+                            {order.status === "Complete" ? "Order Completed" : "Track Order"}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         );
       case 'payment':
@@ -201,7 +341,52 @@ function Login() {
       <Navbar />
       <ToastContainer />
       <div className="login-page">
-        {user ? (
+        {showProfileCompletion ? (
+          <div className="profile-completion">
+            <h2>Complete Your Profile</h2>
+            <form onSubmit={handleCompleteProfile} className="complete-profile-form">
+              <div className="input-group">
+                <label htmlFor="firstName" className="label">First Name:</label>
+                <input
+                  type="text"
+                  id="firstName"
+                  className="input-field"
+                  placeholder="Enter your first name"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="lastName" className="label">Last Name:</label>
+                <input
+                  type="text"
+                  id="lastName"
+                  className="input-field"
+                  placeholder="Enter your last name"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="input-group">
+                <label htmlFor="phoneNumber" className="label">Phone Number:</label>
+                <input
+                  type="tel"
+                  id="phoneNumber"
+                  className="input-field"
+                  placeholder="Enter your phone number"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit" className="button2" disabled={isLoading}>
+                {isLoading ? 'Saving...' : 'Save Profile'}
+              </button>
+            </form>
+          </div>
+        ) : user ? (
           <div className="profile">
             <div className="side-tabs">
               <button

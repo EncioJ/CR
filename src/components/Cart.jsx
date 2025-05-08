@@ -1,12 +1,10 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react"; // Added useState
 import { CartContext } from "./CartContext";
 import "./Cart.css";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Navbar from "./Navbar";
-
-// Firebase Firestore import
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import { getAuth } from "firebase/auth";
@@ -16,10 +14,12 @@ function Cart() {
     cartItems,
     removeFromCart,
     decreaseQuantity,
-    increaseQuantity
+    increaseQuantity,
+    clearCart, // Import clearCart from CartContext
   } = useContext(CartContext);
 
   const navigate = useNavigate();
+  const [specialInstructions, setSpecialInstructions] = useState(""); // State for special instructions
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + (item.price ? item.price * item.quantity : 0),
@@ -63,22 +63,31 @@ function Cart() {
     const orderData = {
       customerName: user.displayName || "Customer",
       email: user.email,
-      items: cartItems.map(item => ({
+      items: cartItems.map((item) => ({
         name: item.name,
         price: item.price,
-        quantity: item.quantity
+        quantity: item.quantity,
       })),
       total: totalPrice,
+      specialInstructions: specialInstructions || "None", // Include special instructions
       status: "pending",
-      createdAt: serverTimestamp()
+      createdAt: serverTimestamp(),
     };
+
+    console.log("Order Data:", orderData); // Debugging: Check if specialInstructions is included
 
     try {
       const docRef = await addDoc(collection(db, "orders"), orderData);
       console.log("Order ID:", docRef.id);
       toast.success(`Order submitted! Receipt will be sent to ${user.email}`);
+
+      // Clear the cart
+      clearCart();
+
+      // Redirect to the Order Tracking page
+      navigate(`/order-tracking/${docRef.id}`);
     } catch (error) {
-      console.error("Order submission error:", error);
+      console.error("Order submission error:", error.message);
       toast.error("Failed to place order.");
     }
   };
@@ -93,7 +102,8 @@ function Cart() {
         <div className="empty-cart-container">
           <h2 className="empty-cart-title">Your Cart is Empty</h2>
           <p className="empty-cart-message">
-            Oops! It looks like you haven’t added anything to your cart yet. Explore our menu and find something delicious!
+            Oops! It looks like you haven’t added anything to your cart yet.
+            Explore our menu and find something delicious!
           </p>
           <button className="empty-cart-btn" onClick={() => navigate("/menu")}>
             Explore Menu
@@ -112,7 +122,11 @@ function Cart() {
             {cartItems.map((item, index) => (
               <div key={index} className="cart-table-row">
                 <div className="cart-item-info">
-                  <img src={item.image} alt={item.name} className="cart-image" />
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="cart-image"
+                  />
                   <div>
                     <span className="cart-item-name">{item.name}</span>
                     <span className="cart-item-category">{item.category}</span>
@@ -148,7 +162,12 @@ function Cart() {
           <div className="cart-footer">
             <div className="special-instructions">
               <label htmlFor="instructions">Special Instructions</label>
-              <textarea id="instructions" placeholder="Add any special instructions here..." />
+              <textarea
+                id="instructions"
+                placeholder="Add any special instructions here..."
+                value={specialInstructions} // Bind to state
+                onChange={(e) => setSpecialInstructions(e.target.value)} // Update state on change
+              />
             </div>
             <div className="cart-summary">
               <div className="cart-total">

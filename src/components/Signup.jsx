@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebaseConfig';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig'; // Ensure Firestore is configured
 import userIcon from "./imageFiles/userIcon.svg";
 import lockIcon from "./imageFiles/lock.svg";
 import facebook from "./imageFiles/facebook.png";
 import google from "./imageFiles/google.png";
-import './Signup.css'; // Import the new Signup.css
+import './Signup.css';
 import Navbar from './Navbar';
 
 function SignUp() {
   const navigate = useNavigate();
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [phoneNumber, setPhoneNumber] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -24,7 +28,18 @@ function SignUp() {
       return;
     }
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      // Create user with Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Save additional user data to Firestore
+      await setDoc(doc(db, 'users', user.uid), {
+        firstName,
+        lastName,
+        phoneNumber,
+        email,
+      });
+
       setErrorMsg('');
       setSuccessMsg('Account created successfully!');
       setTimeout(() => {
@@ -54,6 +69,42 @@ function SignUp() {
         <div className="signup-container">
           <h2 className="signup-title">Sign Up</h2>
           <form onSubmit={handleSignUp} className="signup-form">
+            <div className="input-group">
+              <label htmlFor="firstName" className="label">First Name:</label>
+              <input
+                type="text"
+                id="firstName"
+                className="input-field"
+                placeholder="Enter your first name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="lastName" className="label">Last Name:</label>
+              <input
+                type="text"
+                id="lastName"
+                className="input-field"
+                placeholder="Enter your last name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="phoneNumber" className="label">Phone Number:</label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                className="input-field"
+                placeholder="Enter your phone number"
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                required
+              />
+            </div>
             <div className="input-group">
               <img src={userIcon} alt="User Icon" className="icon" />
               <label htmlFor="email" className="label">Email:</label>

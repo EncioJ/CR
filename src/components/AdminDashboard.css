@@ -361,6 +361,78 @@
   transform: scale(0.95); /* Slight shrink on click */
 }
 
+/* Orders Table */
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.orders-table th,
+.orders-table td {
+  border: 1px solid #e0e0e0;
+  padding: 12px;
+  text-align: left;
+  color: black; /* Make text black */
+}
+
+.orders-table th {
+  background-color: #f1f1f8;
+  font-weight: 600;
+}
+
+.orders-table tr:nth-child(even) {
+  background-color: #fafaff;
+}
+
+.orders-table tr:hover {
+  background-color: #f0f2ff;
+}
+
+.complete-button,
+.cancel-button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.complete-button {
+  background-color: #28a745; /* Green for Complete */
+  color: white;
+}
+
+.complete-button:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+.complete-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.cancel-button {
+  background-color: #dc3545; /* Red for Cancel */
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #c82333;
+  transform: scale(1.05);
+}
+
+.cancel-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
 h3 {
   color:black;
 }
