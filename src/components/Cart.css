@@ -211,7 +211,7 @@
 }
 
 .empty-cart-btn:hover {
-  background-color: #228b22;
+  background-color: #288e28;
   transform: scale(1.05);
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3);
 }
