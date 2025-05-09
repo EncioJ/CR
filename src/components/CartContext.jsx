@@ -68,7 +68,7 @@ export const CartProvider = ({ children }) => {
    * Add item to cart or increase quantity if it already exists
    * Quantity is increased by 1
    */
-  const addToCart = (item) => {
+    const addToCart = (item) => {
     if (!user) {
       toast.error("Please log in to proceed with your order", {
         position: "top-center",
@@ -79,6 +79,27 @@ export const CartProvider = ({ children }) => {
         draggable: true,
         progress: undefined,
       });
+      return;
+    }
+
+    // Check if the user is verified
+    if (!user.emailVerified) {
+      toast.error(
+        <div>
+          <p>Please verify your email to add items.</p>
+          <Link to="/login" style={{ color: "#00000f", textDecoration: "underline" }}>
+            Profile Page
+          </Link>
+        </div>,
+        {
+          position: "top-center",
+          autoClose: false, // Keep the toast open until dismissed
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
+      );
       return;
     }
 

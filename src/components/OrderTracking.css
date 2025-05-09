@@ -161,3 +161,100 @@
   border-top: 1px solid #ddd; /* Light gray divider */
   margin: 20px 0;
 }
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+  .order-tracking-container {
+    padding: 15px; /* Reduce padding for smaller screens */
+    border-radius: 6px; /* Slightly reduce border radius */
+    box-shadow: none; /* Remove shadow for a cleaner look */
+  }
+
+  .progress-bar {
+    height: 15px; /* Reduce height of the progress bar */
+    margin: 15px 0; /* Adjust spacing */
+  }
+
+  .tracker-message {
+    font-size: 12px; /* Reduce font size */
+    margin-top: 15px; /* Adjust spacing */
+  }
+
+  .waiting-dots {
+    font-size: 14px; /* Reduce font size */
+    margin-top: 8px; /* Adjust spacing */
+  }
+
+  .button-container {
+    margin-top: 15px; /* Adjust spacing */
+  }
+
+  .back-to-menu-btn {
+    font-size: 14px; /* Reduce font size */
+    padding: 8px 16px; /* Adjust padding */
+    border-radius: 3px; /* Slightly reduce border radius */
+  }
+
+  .order-details {
+    margin-top: 15px; /* Adjust spacing */
+    padding: 10px; /* Reduce padding */
+    border-radius: 6px; /* Slightly reduce border radius */
+  }
+
+  .order-details h3 {
+    font-size: 16px; /* Reduce font size */
+    margin-bottom: 8px; /* Adjust spacing */
+  }
+
+  .order-details p,
+  .order-details ul li {
+    font-size: 12px; /* Reduce font size */
+    margin: 4px 0; /* Adjust spacing */
+  }
+
+  .order-tracking-container hr {
+    margin: 15px 0; /* Adjust spacing */
+  }
+}
+
+@media (max-width: 480px) {
+  .order-tracking-container {
+    padding: 10px; /* Further reduce padding */
+  }
+
+  .progress-bar {
+    height: 10px; /* Further reduce height of the progress bar */
+    margin: 10px 0; /* Adjust spacing */
+  }
+
+  .tracker-message {
+    font-size: 10px; /* Further reduce font size */
+  }
+
+  .waiting-dots {
+    font-size: 12px; /* Further reduce font size */
+  }
+
+  .back-to-menu-btn {
+    font-size: 12px; /* Further reduce font size */
+    padding: 6px 12px; /* Adjust padding */
+  }
+
+  .order-details {
+    padding: 8px; /* Further reduce padding */
+    border-radius: 4px; /* Further reduce border radius */
+  }
+
+  .order-details h3 {
+    font-size: 14px; /* Further reduce font size */
+  }
+
+  .order-details p,
+  .order-details ul li {
+    font-size: 10px; /* Further reduce font size */
+  }
+
+  .order-tracking-container hr {
+    margin: 10px 0; /* Adjust spacing */
+  }
+}

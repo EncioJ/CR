@@ -230,3 +230,207 @@
     transform: translateY(0);
   }
 }
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+  .cart-container {
+    padding: 100px; /* Reduce padding for smaller screens */
+    width: 100%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
+  }
+
+  .cart-header {
+    font-size: 1.2rem; /* Reduce font size */
+    margin-bottom: 15px; /* Adjust spacing */
+  }
+
+  .cart-content {
+    gap: 15px; /* Reduce gap between items */
+  }
+
+  .cart-table {
+    width: 100%; /* Ensure it spans the full width */
+    margin: 0; /* Remove extra margins */
+    padding: 0; /* Remove extra padding */
+  }
+
+  .cart-table-header,
+  .cart-table-row {
+    grid-template-columns: auto 1fr auto; /* Simplify grid layout */
+    font-size: 0.9rem; /* Reduce font size */
+    padding: 10px; /* Adjust padding */
+  }
+
+  .cart-item-info {
+    flex-direction: column; /* Stack image and text vertically */
+    align-items: center;
+    gap: 10px; /* Add spacing between image and text */
+  }
+
+  .cart-image {
+    width: 100px; /* Reduce image size */
+    height: 100px;
+  }
+
+  .cart-item-name {
+    font-size: 1rem; /* Adjust font size */
+    text-align: center; /* Center-align text */
+  }
+
+  .cart-item-category {
+    font-size: 0.8rem; /* Reduce font size */
+    text-align: center; /* Center-align text */
+  }
+
+  .quantity-controls {
+    justify-content: center; /* Center-align quantity controls */
+    gap: 10px; /* Add spacing between buttons */
+  }
+
+  .qty-btn {
+    padding: 5px 8px; /* Adjust padding */
+    font-size: 0.9rem; /* Reduce font size */
+  }
+
+  .remove-btn {
+    font-size: 30px; /* Reduce size of remove button */
+  }
+
+  .cart-footer {
+    flex-direction: column; /* Stack footer items vertically */
+    gap: 15px; /* Add spacing between items */
+    margin-top: 15px; /* Adjust spacing */
+  }
+
+  .special-instructions textarea {
+    height: 60px; /* Reduce height */
+    font-size: 0.9rem; /* Adjust font size */
+  }
+
+  .cart-summary {
+    text-align: center; /* Center-align summary */
+  }
+
+  .cart-total {
+    font-size: 1.2rem; /* Reduce font size */
+  }
+
+  .checkout-btn {
+    font-size: 1rem; /* Adjust font size */
+    padding: 8px 15px; /* Adjust padding */
+    align-self: center; /* Center-align button */
+  }
+
+  .empty-cart-container {
+    padding: 30px 15px; /* Reduce padding */
+    margin: 30px auto; /* Adjust margin */
+    max-width: 90%; /* Ensure it fits within the screen */
+  }
+
+  .empty-cart-icon {
+    width: 100px; /* Reduce icon size */
+    margin-bottom: 15px; /* Adjust spacing */
+  }
+
+  .empty-cart-title {
+    font-size: 2rem; /* Reduce font size */
+    margin-bottom: 15px; /* Adjust spacing */
+  }
+
+  .empty-cart-message {
+    font-size: 1rem; /* Adjust font size */
+    margin-bottom: 20px; /* Adjust spacing */
+  }
+
+  .empty-cart-btn {
+    font-size: 0.9rem; /* Adjust font size */
+    padding: 10px 20px; /* Adjust padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .cart-container {
+    padding: 5px; /* Further reduce padding */
+  }
+
+  .cart-header {
+    font-size: 1rem; /* Further reduce font size */
+  }
+
+  .cart-table-header,
+  .cart-table-row {
+    grid-template-columns: 1fr auto; /* Simplify grid layout further */
+    font-size: 0.8rem; /* Further reduce font size */
+    padding: 5px; /* Adjust padding */
+  }
+
+  .cart-item-info {
+    gap: 5px; /* Reduce spacing */
+  }
+
+  .cart-image {
+    width: 80px; /* Further reduce image size */
+    height: 80px;
+  }
+
+  .cart-item-name {
+    font-size: 0.9rem; /* Further reduce font size */
+  }
+
+  .cart-item-category {
+    font-size: 0.7rem; /* Further reduce font size */
+  }
+
+  .quantity-controls {
+    gap: 5px; /* Reduce spacing between buttons */
+  }
+
+  .qty-btn {
+    padding: 4px 6px; /* Further adjust padding */
+    font-size: 0.8rem; /* Further reduce font size */
+  }
+
+  .remove-btn {
+    font-size: 25px; /* Further reduce size of remove button */
+  }
+
+  .cart-footer {
+    gap: 10px; /* Reduce spacing between items */
+  }
+
+  .special-instructions textarea {
+    height: 50px; /* Further reduce height */
+    font-size: 0.8rem; /* Further adjust font size */
+  }
+
+  .cart-total {
+    font-size: 1rem; /* Further reduce font size */
+  }
+
+  .checkout-btn {
+    font-size: 0.9rem; /* Further adjust font size */
+    padding: 6px 12px; /* Further adjust padding */
+  }
+
+  .empty-cart-container {
+    padding: 20px 10px; /* Further reduce padding */
+    margin: 20px auto; /* Adjust margin */
+  }
+
+  .empty-cart-icon {
+    width: 80px; /* Further reduce icon size */
+  }
+
+  .empty-cart-title {
+    font-size: 1.5rem; /* Further reduce font size */
+  }
+
+  .empty-cart-message {
+    font-size: 0.9rem; /* Further adjust font size */
+  }
+
+  .empty-cart-btn {
+    font-size: 0.8rem; /* Further adjust font size */
+    padding: 8px 15px; /* Further adjust padding */
+  }
+}

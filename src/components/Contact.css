@@ -87,68 +87,124 @@
   opacity: 0.8;
 }
 
-/* Responsive Design */
+/* Responsive Design for Mobile */
 @media (max-width: 768px) {
+  .contact-us {
+    padding: 15px; /* Reduce padding for smaller screens */
+    margin-top: 100px; /* Adjust spacing below the navbar */
+    width: 87%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
+  }
+
   .contact-container {
     flex-direction: column; /* Stack columns vertically */
     align-items: center;
-    gap: 20px;
+    gap: 20px; /* Add spacing between stacked columns */
+    width: 100%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 
   .contact-column {
     width: 100%; /* Make columns take full width */
+    padding: 15px; /* Add padding for better spacing */
+    background-color: #ffffff; /* Add a white background for better contrast */
+    border-radius: 10px; /* Add rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 
   .subheader {
     font-size: 1.5rem; /* Reduce font size for smaller screens */
+    margin-bottom: 15px; /* Adjust spacing */
+    text-align: center; /* Ensure text is centered */
   }
 
   .contact-item {
     flex-direction: column; /* Stack icon and text vertically */
     align-items: center;
     text-align: center;
+    gap: 10px; /* Add spacing between icon and text */
+    width: 100%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 
   .icon {
-    margin-right: 0;
-    margin-bottom: 10px;
+    margin-right: 0; /* Remove right margin */
+    margin-bottom: 10px; /* Add bottom margin */
+    width: 40px; /* Adjust icon size */
+    height: 40px;
   }
 
   .contact-text {
-    font-size: 1rem;
+    font-size: 1rem; /* Reduce font size */
+    text-align: center; /* Center-align text */
+    width: 100%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 
   .location-image {
-    max-width: 100%; /* Ensure the image fits within the screen */
+    max-width: 87%; /* Ensure the image fits within the screen */
+    border-radius: 8px; /* Slightly reduce border radius */
+    margin: 20px 0; /* Add spacing */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 
   .hours {
-    font-size: 1rem;
+    font-size: 1rem; /* Reduce font size */
+    margin-top: 10px;
+    text-align: center; /* Ensure text is centered */
+    width: 100%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
+  }
+
+  .footer {
+    font-size: 0.9rem; /* Reduce footer font size */
+    text-align: center; /* Center-align footer text */
+    margin-top: 20px; /* Adjust spacing */
+    width: 100%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 }
 
 @media (max-width: 480px) {
   .contact-us {
-    padding: 10px; /* Reduce padding for smaller screens */
+    padding: 10px; /* Further reduce padding for smaller screens */
+    width: 100%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 
   .subheader {
     font-size: 1.2rem; /* Further reduce font size */
+    margin-bottom: 10px; /* Adjust spacing */
+    text-align: center; /* Ensure text is centered */
   }
 
   .contact-text {
-    font-size: 0.9rem;
+    font-size: 0.9rem; /* Further reduce font size */
+    text-align: center; /* Ensure text is centered */
+    width: 100%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 
   .location-image {
     border-radius: 5px; /* Reduce border radius */
+    margin: 15px 0; /* Adjust spacing */
+    max-width: 100%; /* Ensure the image fits within the screen */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 
   .hours {
-    font-size: 0.9rem;
+    font-size: 0.9rem; /* Further reduce font size */
+    text-align: center; /* Ensure text is centered */
+    width: 100%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 
   .footer {
-    font-size: 0.8rem; /* Reduce footer font size */
+    font-size: 0.8rem; /* Further reduce footer font size */
+    margin-top: 15px; /* Adjust spacing */
+    text-align: center; /* Ensure text is centered */
+    width: 100%; /* Ensure it spans the full width */
+    box-sizing: border-box; /* Include padding in width calculation */
   }
 }

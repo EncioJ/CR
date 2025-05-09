@@ -48,7 +48,7 @@ const Contact = () => {
         <div className="landmark">Near Guam Reef Hotel</div>
         <br />
         <iframe
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3879.4575915225455!2d144.80117867579293!3d13.507486302901585!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x671f82927a92bce5%3A0x48d45849f274fb24!2s1000%20Pale%20San%20Vitores%20Rd%2C%20Tumon%2C%2096913%2C%20Guam!5e0!3m2!1sen!2s!4v1743596168684!5m2!1sen!2s"
+          src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d413.99436475599344!2d144.80257257076408!3d13.43377007536673!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2s!4v1746693722000!5m2!1sen!2s"
           width="800"
           height="450"
           style={{ border: "2px solid black" }}

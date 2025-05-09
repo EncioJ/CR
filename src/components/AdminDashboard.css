@@ -67,6 +67,12 @@
   gap: 10px;
   margin-bottom: 20px;
 }
+.menu-item-price {
+  font-size: 1.05rem;
+  font-weight:500;
+  color: #555555; /* Gray color for price */
+  margin-bottom: 8px;
+}
 
 .add-section-form input {
   flex: 1;
@@ -152,25 +158,27 @@
   align-items: center;
 }
 
-.menu-category .remove-section-button {
-  padding: 8px 16px;
-  background-color: #bd190e !important; /* Force the primary blue color */
-  color: #ffffff !important; /* Force white text */
+
+.remove-section-button {
+  padding: 10px 20px;
+  background-color: #4a3aff; /* Primary blue */
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  font-weight: 600;
   transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-.menu-category .remove-section-button:hover {
-  background-color: #372fbd !important; /* Darker blue on hover */
+ .remove-section-button:hover {
+  background-color: #372fbd !important; /* Force darker blue on hover */
   transform: scale(1.05);
   box-shadow: 0px 6px 10px rgba(0, 0, 0, 0.3); /* Enhanced shadow on hover */
 }
 
-.menu-category .remove-section-button:active {
+ .remove-section-button:active {
   transform: scale(0.95); /* Slight shrink on click */
 }
 
@@ -433,7 +441,7 @@
   cursor: not-allowed;
 }
 
-h3 {
+h3,h2 {
   color:black;
 }
 
@@ -452,5 +460,147 @@ h3 {
 @media (max-width: 480px) {
   .menu-items-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Adjust layout for mobile screens */
+@media (max-width: 768px) {
+  .section-dropdown {
+    display: flex;
+    flex-direction: column; /* Stack dropdown and button vertically */
+    gap: 10px; /* Add spacing between dropdown and button */
+  }
+
+  .remove-section-button {
+    margin-top: 10px; /* Add spacing above the button */
+  }
+}
+
+/* Responsive Design for Mobile */
+@media (max-width: 768px) {
+  .admin-dashboard {
+    padding: 10px; /* Reduce padding for smaller screens */
+  }
+
+  .admin-dashboard h1 {
+    font-size: 2rem; /* Reduce font size */
+    margin-bottom: 15px; /* Adjust spacing */
+  }
+
+  .top-menu {
+    flex-direction: column; /* Stack buttons vertically */
+    gap: 10px; /* Reduce spacing between buttons */
+  }
+
+  .content {
+    padding: 15px; /* Reduce padding */
+    border-radius: 8px; /* Slightly reduce border radius */
+  }
+
+  .menu-items-grid {
+    grid-template-columns: repeat(2, 1fr); /* Show 2 items per row */
+    gap: 15px; /* Adjust spacing between items */
+  }
+
+  .menu-item-card {
+    padding: 10px; /* Reduce padding */
+  }
+
+  .menu-item-image {
+    height: 120px; /* Reduce image height */
+  }
+
+  .menu-item-name {
+    font-size: 0.9rem; /* Reduce font size */
+  }
+
+  .add-section-form,
+  .add-menu-item-form {
+    flex-direction: column; /* Stack inputs and buttons vertically */
+    gap: 10px; /* Add spacing between elements */
+  }
+
+  .add-section-form input,
+  .add-menu-item-form input {
+    max-width: 100%; /* Allow inputs to take full width */
+  }
+
+  .users-table,
+  .orders-table {
+    font-size: 0.9rem; /* Reduce font size */
+  }
+
+  .users-table th,
+  .users-table td,
+  .orders-table th,
+  .orders-table td {
+    padding: 8px; /* Reduce padding */
+  }
+
+  .complete-button,
+  .cancel-button {
+    font-size: 0.8rem; /* Reduce font size */
+    padding: 6px 12px; /* Adjust padding */
+  }
+
+  .logout-button {
+    font-size: 0.9rem; /* Reduce font size */
+    padding: 10px 20px; /* Adjust padding */
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-dashboard {
+    padding: 5px; /* Further reduce padding */
+  }
+
+  .admin-dashboard h1 {
+    font-size: 1.8rem; /* Further reduce font size */
+    margin-bottom: 10px; /* Adjust spacing */
+  }
+
+  .menu-items-grid {
+    grid-template-columns: 1fr; /* Show 1 item per row */
+    gap: 10px; /* Adjust spacing between items */
+  }
+
+  .menu-item-card {
+    padding: 8px; /* Further reduce padding */
+  }
+
+  .menu-item-image {
+    height: 100px; /* Further reduce image height */
+  }
+
+  .menu-item-name {
+    font-size: 0.8rem; /* Further reduce font size */
+  }
+
+  .add-section-form,
+  .add-menu-item-form {
+    gap: 8px; /* Reduce spacing between elements */
+  }
+
+  .users-table,
+  .orders-table {
+    font-size: 0.8rem; /* Further reduce font size */
+  }
+
+  .users-table th,
+  .users-table td,
+  .orders-table th,
+  .orders-table td {
+    padding: 6px; /* Further reduce padding */
+  }
+
+  .complete-button,
+  .cancel-button {
+    font-size: 0.7rem; /* Further reduce font size */
+    padding: 5px 10px; /* Adjust padding */
+  }
+
+  .logout-button {
+    font-size: 0.8rem; /* Further reduce font size */
+    padding: 8px 16px; /* Adjust padding */
   }
 }

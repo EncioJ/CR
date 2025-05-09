@@ -7,6 +7,7 @@ import "./Navbar.css";
 
 function Navbar() {
   const [user, setUser] = useState(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false); // State for hamburger menu
   const auth = getAuth();
 
   useEffect(() => {
@@ -17,25 +18,36 @@ function Navbar() {
     return () => unsubscribe(); // Cleanup the listener
   }, [auth]);
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen); // Toggle the menu state
+  };
+
   return (
     <div className="navbar">
       {/* Logo */}
       <Link to="/" className="navbar-logo">
-        KADU KITCHEN
+        JAY'S CHICKEN
       </Link>
 
+      {/* Hamburger Menu for Mobile */}
+      <div className="hamburger-menu" onClick={toggleMenu}>
+        <div className="bar"></div>
+        <div className="bar"></div>
+        <div className="bar"></div>
+      </div>
+
       {/* Navigation Buttons */}
-      <div className="navbar-buttons">
-        <Link to="/">
+      <div className={`navbar-buttons ${isMenuOpen ? "open" : ""}`}>
+        <Link to="/" onClick={() => setIsMenuOpen(false)}>
           <button className="home">Home</button>
         </Link>
-        <Link to="/menu">
+        <Link to="/menu" onClick={() => setIsMenuOpen(false)}>
           <button className="menu">Menu</button>
         </Link>
-        <Link to="/contact">
+        <Link to="/contact" onClick={() => setIsMenuOpen(false)}>
           <button className="contact-locations">Contact & Locations</button>
         </Link>
-        <Link to="/about">
+        <Link to="/about" onClick={() => setIsMenuOpen(false)}>
           <button className="about-us">About Us</button>
         </Link>
       </div>

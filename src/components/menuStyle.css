@@ -49,7 +49,7 @@ body, html {
   font-weight: bold;
   margin-bottom: 20px;
   color: #000000; /* White text for consistency */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Add subtle shadow */
+  text-transform: uppercase;
 }
 
 /* Food Grid */
@@ -166,7 +166,7 @@ body, html {
 @media (max-width: 768px) {
   .menu_section {
     width: 200px;
-    padding: 20px;
+    padding: 24px;
   }
 
   .food-section {

@@ -2,13 +2,14 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { doc, setDoc } from 'firebase/firestore';
-import { auth, db } from '../firebaseConfig'; // Ensure Firestore is configured
+import { auth,provider, db } from '../firebaseConfig'; // Ensure Firestore is configured
 import userIcon from "./imageFiles/userIcon.svg";
 import lockIcon from "./imageFiles/lock.svg";
-import facebook from "./imageFiles/facebook.png";
 import google from "./imageFiles/google.png";
 import './Signup.css';
 import Navbar from './Navbar';
+import handleGoogleLogin from './authHelper/handleGoogleLogin';
+
 
 function SignUp() {
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ function SignUp() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [showProfileCompletion, setShowProfileCompletion] = useState(false);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -43,7 +46,7 @@ function SignUp() {
       setErrorMsg('');
       setSuccessMsg('Account created successfully!');
       setTimeout(() => {
-        navigate('/login'); // Redirect to login page after successful signup
+        navigate('/'); // Redirect to login page after successful signup
       }, 2000);
     } catch (error) {
       switch (error.code) {
@@ -62,6 +65,20 @@ function SignUp() {
     }
   };
 
+  const handleGoogleLoginFunction = () => {
+    handleGoogleLogin(
+      auth,
+      provider,
+      db,
+      setIsLoading,
+      setShowProfileCompletion,
+      setFirstName,
+      setLastName,
+      setPhoneNumber,
+      navigate,
+      setErrorMsg
+    );
+  };
   return (
     <>
       <Navbar />
@@ -154,8 +171,13 @@ function SignUp() {
           <div className="social-login">
             <p>Or Sign Up Using</p>
             <div className="social-icons">
-              <img src={google} alt="Google Icon" />
-              <img src={facebook} alt="Facebook Icon" />
+            <img 
+                src={google} 
+                alt="Google Icon" 
+                onClick={handleGoogleLoginFunction}
+                style={{ cursor: 'pointer' }}
+              />
+           
             </div>
             <footer className="footer">
               <p>© 2023 Fuji Ichybun Restaurant</p>
