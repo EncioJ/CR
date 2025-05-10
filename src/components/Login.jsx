@@ -216,19 +216,18 @@ const LoadprofileTab = () => {
                   required
                 />
               </div>
-              <button type="submit" className="login-button" disabled={isLoading}>
+              <button type="submit" className="button2" disabled={isLoading}>
                 {isLoading ? 'Logging in...' : 'Login'}
               </button>
             </form>
             {errorMsg && <p className="error-message">{errorMsg}</p>}
             <div className="forgot-password">
-              <Link
-                to="#"
+              <button
                 onClick={() => setShowForgotPassword(true)}
-                className="forgot-password"
+                className="link-button transparent-button"
               >
                 Forgot password?
-              </Link>
+              </button>
             </div>
             {showForgotPassword && (
               <div className="forgot-password-popup">
